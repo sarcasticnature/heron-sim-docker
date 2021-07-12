@@ -1,0 +1,41 @@
+FROM osrf/ros:melodic-desktop-full
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt-get install -y vim \
+        ros-melodic-imu-tools \
+        ros-melodic-nmea-msgs \
+        ros-melodic-geographic-msgs \
+        libgeographic-dev \
+        ros-melodic-uuv-simulator \
+        ros-melodic-heron-simulator \
+        ros-melodic-heron-gazebo \
+        less \
+        git \
+        && rm -rf /var/lib/apt/lists/*
+
+RUN source /opt/ros/melodic/setup.bash \
+    && mkdir -p /catkin_ws/src \
+    && cd /catkin_ws \
+    && catkin_make \
+    && cd /catkin_ws/src \
+    && git clone -b kinetic-devel --single-branch https://github.com/sarcasticnature/heron.git \
+    && git clone -b kinetic-update --single-branch https://github.com/sarcasticnature/heron_robot.git \
+    && git clone https://github.com/heron/heron_controller.git \
+    && git clone -b melodic-devel --single-branch https://github.com/cra-ros-pkg/robot_localization.git \
+    && git clone -b kinetic-devel --single-branch https://github.com/heron/heron_simulator.git
+#    && git checkout 301ec73
+
+RUN source /opt/ros/melodic/setup.bash \
+    && cd /catkin_ws \
+    && catkin_make
+
+RUN echo 'source /opt/ros/melodic/setup.bash' >> ~/.bashrc
+RUN echo 'source /catkin_ws/devel/setup.bash' >> ~/.bashrc
+
+COPY ./entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
+
+CMD ["roslaunch", "heron_gazebo", "heron_world.launch"]
+
