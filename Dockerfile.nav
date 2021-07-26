@@ -1,0 +1,20 @@
+FROM heron-sim-custom:latest
+
+RUN apt-get update && apt-get install -y \
+    ros-melodic-move-base \
+#    ros-melodic-base-local-planner \
+    ros-melodic-dwa-local-planner
+    
+
+WORKDIR /catkin_ws/src
+
+RUN git clone https://github.com/sarcasticnature/gps_navigation.git \
+    && git clone https://github.com/sarcasticnature/heron_navigation.git
+
+WORKDIR /catkin_ws/
+
+RUN source /opt/ros/melodic/setup.bash \
+    && catkin_make
+
+WORKDIR /
+
