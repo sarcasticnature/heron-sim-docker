@@ -19,7 +19,7 @@ RUN source /opt/ros/melodic/setup.bash \
     && cd /catkin_ws \
     && catkin_make \
     && cd /catkin_ws/src \
-    && git clone -b kinetic-devel --single-branch https://github.com/sarcasticnature/heron.git \
+    && git clone -b ncsu-devel --single-branch https://github.com/sarcasticnature/heron.git \
     && git clone -b kinetic-update --single-branch https://github.com/sarcasticnature/heron_robot.git \
     && git clone https://github.com/heron/heron_controller.git \
     && git clone -b melodic-devel --single-branch https://github.com/cra-ros-pkg/robot_localization.git \
